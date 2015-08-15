@@ -1,0 +1,33 @@
+#!/bin/bash
+set +x
+TARGETS=();
+ASSET_IDS=();
+
+TARGETS[0]=test;
+ASSET_IDS[0]=284543610;
+
+TARGETS[1]=release;
+ASSET_IDS[1]=284543741;
+
+for index in "${!TARGETS[@]}"; do
+	# Check target;
+	AssetID=${ASSET_IDS[$index]};
+	TargetName=${TARGETS[$index]};
+	URL="http://roblox.com/studio/plugins/info?assetId=$AssetID";
+	curl -L -o "asset-$TargetName" -s $URL;
+	AssetVersion=$(grep -o "value=\"[0-9]*" "asset-$TargetName");
+	AssetVersion=${AssetVersion:7};
+	
+	file="$TargetName.assetid";
+	touch $file;
+	last=$(cat $file);
+	if [ $last!=$AssetVersion ];
+	then
+		echo "NEW VERSION FOR TARGET: $TargetName, new AssetVersionID is: $AssetVersion";
+		echo $AssetVersion > $file;
+		git add $file;
+		git commit -m 'update';
+		git push;
+	fi
+	echo $AssetVersion $TargetName 
+done	
