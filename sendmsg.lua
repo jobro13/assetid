@@ -6,6 +6,7 @@ if not Send then
 end
 
 local Port=3333
+os.execute("~/.bash_profile")
 local User = os.getenv("BOTUSER")
 local Pass = os.getenv("BOTPASS")
 
