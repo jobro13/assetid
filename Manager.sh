@@ -1,6 +1,9 @@
 #!/bin/bash
 source /home/pi/.bash_profile
-set +x
+
+eval "$(ssh-agent -s)";
+
+
 TARGETS=();
 ASSET_IDS=();
 
