@@ -1,4 +1,5 @@
 #!/bin/bash
+source /home/pi/.bash_profile
 set +x
 TARGETS=();
 ASSET_IDS=();
@@ -17,17 +18,23 @@ for index in "${!TARGETS[@]}"; do
 	curl -L -o "asset-$TargetName" -s $URL;
 	AssetVersion=$(grep -o "value=\"[0-9]*" "asset-$TargetName");
 	AssetVersion=${AssetVersion:7};
-	
+
 	file="$TargetName.assetid";
 	touch $file;
 	last=$(cat $file);
-	if [ $last!=$AssetVersion ];
+#	echo $last;
+#	echo $AssetVersion;
+#	echo ${#last};
+#	echo ${#AssetVersion};	
+	if [ $last != $AssetVersion ];
 	then
 		echo "NEW VERSION FOR TARGET: $TargetName, new AssetVersionID is: $AssetVersion";
 		echo $AssetVersion > $file;
 		git add $file;
 		git commit -m 'update';
 		git push;
+		#touch YES;
+		lua sendmsg.lua "deployment finished: $TargetName, waiting for SYNC...";
 	fi
 	echo $AssetVersion $TargetName 
-done	
+done
