@@ -1,8 +1,6 @@
 #!/bin/bash
-source /home/pi/.bash_profile
 
-eval "$(ssh-agent -s)";
-
+source ~/.bash_profile;
 
 TARGETS=();
 ASSET_IDS=();
@@ -12,6 +10,9 @@ ASSET_IDS[0]=284543610;
 
 TARGETS[1]=release;
 ASSET_IDS[1]=284543741;
+
+TARGETS[2]=Fattycat17_dev;
+ASSET_IDS[2]=285494479;
 
 for index in "${!TARGETS[@]}"; do
 	# Check target;
@@ -25,11 +26,12 @@ for index in "${!TARGETS[@]}"; do
 	file="$TargetName.assetid";
 	touch $file;
 	last=$(cat $file);
-#	echo $last;
-#	echo $AssetVersion;
+	#echo "po";
+	#echo $last;
+	#echo $AssetVersion;
 #	echo ${#last};
 #	echo ${#AssetVersion};	
-	if [ $last != $AssetVersion ];
+	if [ "$last" != $AssetVersion ];
 	then
 		echo "NEW VERSION FOR TARGET: $TargetName, new AssetVersionID is: $AssetVersion";
 		echo $AssetVersion > $file;
